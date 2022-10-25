@@ -1,12 +1,29 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NotesController } from './notes.controller';
-import { Note, NoteSchema } from './schema/note.schema';
+import { Note, NoteDocument, NoteSchema } from './schema/note.schema';
 import { NotesService } from './notes.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: Note.name, schema: NoteSchema }])],
+  imports: [
+    MongooseModule.forFeatureAsync([
+      {
+        name: Note.name,
+        useFactory: () => {
+          const schema = NoteSchema;
+          schema.set('toJSON', {
+            transform: function (_doc, ret: NoteDocument) {
+              ret.id = ret._id;
+              delete ret._id;
+              delete ret.__v;
+            },
+          });
+          return schema;
+        },
+      },
+    ]),
+  ],
   controllers: [NotesController],
-  providers: [NotesService]
+  providers: [NotesService],
 })
 export class NotesModule {}

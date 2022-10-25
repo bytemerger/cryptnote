@@ -3,19 +3,21 @@ import { Document } from 'mongoose';
 
 export type NoteDocument = Note & Document;
 
-@Schema({ timestamps: {
+@Schema({
+  timestamps: {
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
-} })
+    updatedAt: 'updated_at',
+  },
+})
 export class Note {
-  @Prop({ required: true})
+  @Prop({ required: true })
   note!: string;
 
   @Prop()
   createdAt: Date;
 
   @Prop()
-  updatedAt: Date
+  updatedAt: Date;
 }
 
 export const NoteSchema = SchemaFactory.createForClass(Note);
