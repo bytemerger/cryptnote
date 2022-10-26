@@ -27,6 +27,6 @@ RUN yarn install --production=true
 
 COPY --from=development /app/dist ./dist
 
-EXPOSE 3000
+EXPOSE $PORT
 
 CMD ["node", "dist/main"]
