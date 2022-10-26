@@ -12,10 +12,10 @@ import { PaginationService } from 'src/pagination/pagination.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { getAllQuery } from './dto/get-all-query.dto';
 import { NoteIdParam } from './dto/note-id-param.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 import { NotesService } from './notes.service';
-import { Note, NoteDocument } from './schema/note.schema';
 
-@Controller('notes')
+@Controller('v1/notes')
 export class NotesController {
   constructor(
     private noteService: NotesService,
@@ -36,13 +36,23 @@ export class NotesController {
   @Post()
   async createNote(
     @Body() createNoteDto: CreateNoteDto,
-  ): Promise<NoteDocument> {
+  ) {
     return await this.noteService.create(createNoteDto);
   }
 
   @Put('/:id')
-  updateNote(@Param() param: NoteIdParam, @Body() updateNote: CreateNoteDto) {
+  updateNote(@Param() param: NoteIdParam, @Body() updateNote: UpdateNoteDto) {
     return this.noteService.update(param.id, updateNote);
+  }
+
+  @Get('/:id/encrypted')
+  getNoteEncrypted(@Param() param: NoteIdParam) {
+    return this.noteService.getNoteEncrypted(param.id);
+  }
+
+  @Get('/:id/decrypted')
+  getNoteDecrypted(@Param() param: NoteIdParam) {
+    return this.noteService.getNoteDencrypted(param.id);
   }
 
   @Delete('/:id')

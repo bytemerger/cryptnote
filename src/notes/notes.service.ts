@@ -3,17 +3,20 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, Query } from 'mongoose';
 import { EncryptionService } from 'src/encryption/encryption.service';
 import { CreateNoteDto } from './dto/create-note.dto';
+import { UpdateNoteDto } from './dto/update-note.dto';
 import { Note, NoteDocument } from './schema/note.schema';
 
 @Injectable()
 export class NotesService {
-  constructor(@InjectModel(Note.name) private noteModel: Model<NoteDocument>, private encryptService: EncryptionService) {}
+  constructor(
+    @InjectModel(Note.name) private noteModel: Model<NoteDocument>,
+    private encryptService: EncryptionService,
+  ) {}
 
   async create(createNoteDto: CreateNoteDto): Promise<NoteDocument> {
-
     const encryptedNote = {
-      note: this.encryptService.encrypt(createNoteDto.note)
-    }
+      note: this.encryptService.encrypt(createNoteDto.note),
+    };
 
     const createdNote = new this.noteModel(encryptedNote);
     return createdNote.save();
@@ -23,10 +26,35 @@ export class NotesService {
     return this.noteModel.find({});
   }
 
-  async update(id: ObjectId, note: CreateNoteDto) {
+  async getNoteEncrypted(id: ObjectId) {
+    const note = (await this.noteModel.findById(id)) ?? null;
+    if (note) {
+      return note;
+    }
+    throw new NotFoundException(`Note with id ${id} does not exist`);
+  }
+
+  async getNoteDencrypted(id: ObjectId) {
+    const note = await this.noteModel.findById(id);
+    if (note) {
+      note.note = this.encryptService.decrypt(note.note);
+      return note;
+    }
+    throw new NotFoundException(`Note with id ${id} does not exist`);
+  }
+
+  async update(id: ObjectId, note: UpdateNoteDto) {
+    let insertNote = note.note;
+    if (!note.encrypted) {
+      insertNote = this.encryptService.encrypt(note.note);
+    }
     const updated =
       (
-        await this.noteModel.findByIdAndUpdate(id, note, { new: true })
+        await this.noteModel.findByIdAndUpdate(
+          id,
+          { note: insertNote },
+          { new: true },
+        )
       )?.toJSON() ?? null;
     if (updated) return updated;
     throw new NotFoundException(`Note with id ${id} does not exist`);
