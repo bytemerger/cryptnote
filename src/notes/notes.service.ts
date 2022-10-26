@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId, Query } from 'mongoose';
-import { EncryptionService } from 'src/encryption/encryption.service';
+import { Model, Query } from 'mongoose';
+import { EncryptionService } from '../encryption/encryption.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { UpdateNoteDto } from './dto/update-note.dto';
 import { Note, NoteDocument } from './schema/note.schema';
@@ -26,7 +26,7 @@ export class NotesService {
     return this.noteModel.find({});
   }
 
-  async getNoteEncrypted(id: ObjectId) {
+  async getNoteEncrypted(id: string) {
     const note = (await this.noteModel.findById(id)) ?? null;
     if (note) {
       return note;
@@ -34,7 +34,7 @@ export class NotesService {
     throw new NotFoundException(`Note with id ${id} does not exist`);
   }
 
-  async getNoteDencrypted(id: ObjectId) {
+  async getNoteDencrypted(id: string) {
     const note = await this.noteModel.findById(id);
     if (note) {
       note.note = this.encryptService.decrypt(note.note);
@@ -43,7 +43,7 @@ export class NotesService {
     throw new NotFoundException(`Note with id ${id} does not exist`);
   }
 
-  async update(id: ObjectId, note: UpdateNoteDto) {
+  async update(id: string, note: UpdateNoteDto) {
     let insertNote = note.note;
     if (!note.encrypted) {
       insertNote = this.encryptService.encrypt(note.note);
@@ -60,7 +60,7 @@ export class NotesService {
     throw new NotFoundException(`Note with id ${id} does not exist`);
   }
 
-  async delete(id: ObjectId) {
+  async delete(id: string) {
     const exist = await this.noteModel.findById(id);
     if (exist) {
       return await this.noteModel.findByIdAndDelete(id);
