@@ -49,7 +49,7 @@ export class NotesController {
   async deleteNote(@Param() param: NoteIdParam) {
     await this.noteService.delete(param.id);
     return {
-      message: 'deleted successfully'
-    }
+      message: 'deleted successfully',
+    };
   }
 }

@@ -4,6 +4,7 @@ import { NotesController } from './notes.controller';
 import { Note, NoteDocument, NoteSchema } from './schema/note.schema';
 import { NotesService } from './notes.service';
 import { PaginationService } from 'src/pagination/pagination.service';
+import { EncryptionService } from 'src/encryption/encryption.service';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { PaginationService } from 'src/pagination/pagination.service';
     ]),
   ],
   controllers: [NotesController],
-  providers: [NotesService, PaginationService],
+  providers: [NotesService, PaginationService, EncryptionService],
 })
 export class NotesModule {}
