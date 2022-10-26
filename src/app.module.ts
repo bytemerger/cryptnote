@@ -5,11 +5,11 @@ import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    NotesModule,
-    MongooseModule.forRoot('mongodb://localhost/sp'),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    NotesModule,
+    MongooseModule.forRoot(process.env.MONGO_URL!),
   ],
 })
 export class AppModule {}
