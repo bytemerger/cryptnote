@@ -3,8 +3,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { NotesController } from './notes.controller';
 import { Note, NoteDocument, NoteSchema } from './schema/note.schema';
 import { NotesService } from './notes.service';
-import { PaginationService } from 'src/pagination/pagination.service';
-import { EncryptionService } from 'src/encryption/encryption.service';
+import { PaginationService } from '../pagination/pagination.service';
+import { EncryptionService } from '../encryption/encryption.service';
 
 @Module({
   imports: [

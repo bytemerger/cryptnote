@@ -8,7 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { PaginationService } from 'src/pagination/pagination.service';
+import { PaginationService } from '../pagination/pagination.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { getAllQuery } from './dto/get-all-query.dto';
 import { NoteIdParam } from './dto/note-id-param.dto';
@@ -34,9 +34,7 @@ export class NotesController {
   }
 
   @Post()
-  async createNote(
-    @Body() createNoteDto: CreateNoteDto,
-  ) {
+  async createNote(@Body() createNoteDto: CreateNoteDto) {
     return await this.noteService.create(createNoteDto);
   }
 
