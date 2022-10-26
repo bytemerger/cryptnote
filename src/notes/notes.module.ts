@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { NotesController } from './notes.controller';
 import { Note, NoteDocument, NoteSchema } from './schema/note.schema';
 import { NotesService } from './notes.service';
+import { PaginationService } from 'src/pagination/pagination.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { NotesService } from './notes.service';
     ]),
   ],
   controllers: [NotesController],
-  providers: [NotesService],
+  providers: [NotesService, PaginationService],
 })
 export class NotesModule {}

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Query } from 'mongoose';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { Note, NoteDocument } from './schema/note.schema';
 
@@ -11,5 +11,9 @@ export class NotesService {
   async create(createNoteDto: CreateNoteDto): Promise<NoteDocument> {
     const createdNote = new this.noteModel(createNoteDto);
     return createdNote.save();
+  }
+
+  getAllModel(): Query<NoteDocument[], NoteDocument> {
+    return this.noteModel.find({});
   }
 }
