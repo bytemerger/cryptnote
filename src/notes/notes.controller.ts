@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -10,6 +11,7 @@ import {
 import { PaginationService } from 'src/pagination/pagination.service';
 import { CreateNoteDto } from './dto/create-note.dto';
 import { getAllQuery } from './dto/get-all-query.dto';
+import { NoteIdParam } from './dto/note-id-param.dto';
 import { NotesService } from './notes.service';
 import { Note, NoteDocument } from './schema/note.schema';
 
@@ -39,12 +41,15 @@ export class NotesController {
   }
 
   @Put('/:id')
-  updateNote(): string {
-    return 'This is the get all route';
+  updateNote(@Param() param: NoteIdParam, @Body() updateNote: CreateNoteDto) {
+    return this.noteService.update(param.id, updateNote);
   }
 
   @Delete('/:id')
-  deleteNote(): string {
-    return 'This is the get all route';
+  async deleteNote(@Param() param: NoteIdParam) {
+    await this.noteService.delete(param.id);
+    return {
+      message: 'deleted successfully'
+    }
   }
 }
